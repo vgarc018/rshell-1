@@ -37,7 +37,7 @@ int opt;
         switch (opt){ //transitions to opt states
             case 'a':
                 dash_a = true;
-                cout << "setting case: a " << endl;
+                //cout << "setting case: a " << endl;
                 //call dash_a helper to print the -a
             break;
             case 'l':
@@ -63,9 +63,9 @@ void a_flag(){
     dirent* direntp;
     while((direntp = readdir(dirp))){
         string file_name = direntp->d_name;
-        cout << file_name <<"     " << setw(5);
+        cout << file_name <<"   ";
         prints++;
-        if(prints % 4 == 0){ cout << endl;}
+        if(prints % 3 == 0){ cout << endl;}
     }
     closedir(dirp);
     cout << endl;
