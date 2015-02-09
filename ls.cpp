@@ -78,21 +78,25 @@ void l_flag(){
     const char* dirName = ".";
     DIR* dirp = opendir(dirName);
     dirent* direntp;
+    while((direntp = readdir(dirp))){
+       //error in stat sys call
+       //if((stat(direntp->d_name), &stat_buf) == -1) {perror("stat");}
+       // else{
+                string l_file = direntp->d_name;
+                if(stat(l_file.c_str(), &stat_buf) == -1) { perror("stat");}
 
-    if(stat((direntp->d_name), &stat_buf) == -1) {perror("stat");}
-    else{
-
-            cout << ("-");
-            cout << ((stat_buf.st_mode & S_IRUSR) ? "r":"-");
-            cout << ((stat_buf.st_mode & S_IWUSR) ? "w":"-");
-            cout << ((stat_buf.st_mode & S_IXUSR) ? "x":"-");
-            cout << ((stat_buf.st_mode & S_IRGRP) ? "x":"-");
-            cout << ((stat_buf.st_mode & S_IWGRP) ? "w":"-");
-            cout << ((stat_buf.st_mode & S_IXGRP) ? "x":"-");
-            cout << ((stat_buf.st_mode & S_IROTH) ? "r":"-");
-            cout << ((stat_buf.st_mode & S_IWOTH) ? "w":"-");
-            cout << ((stat_buf.st_mode & S_IXOTH) ? "x":"-");
-            cout << endl;
+                cout << (S_ISDIR(stat_buf.st_mode) ? "d":"-");
+                cout << ((stat_buf.st_mode & S_IRUSR) ? "r":"-");
+                cout << ((stat_buf.st_mode & S_IWUSR) ? "w":"-");
+                cout << ((stat_buf.st_mode & S_IXUSR) ? "x":"-");
+                cout << ((stat_buf.st_mode & S_IRGRP) ? "x":"-");
+                cout << ((stat_buf.st_mode & S_IWGRP) ? "w":"-");
+                cout << ((stat_buf.st_mode & S_IXGRP) ? "x":"-");
+                cout << ((stat_buf.st_mode & S_IROTH) ? "r":"-");
+                cout << ((stat_buf.st_mode & S_IWOTH) ? "w":"-");
+                cout << ((stat_buf.st_mode & S_IXOTH) ? "x":"-");
+                cout << endl;
+       // }
     }
     closedir(dirp);
     ////////////////////////////////////////
