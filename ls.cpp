@@ -10,6 +10,10 @@
 #include <string.h>
 #include <boost/tokenizer.hpp>
 #include <stdio.h>
+#include <time.h>
+#include <iomanip>
+#include <pwd.h>
+
 using namespace std;
 
 bool dash_a = false;
@@ -53,45 +57,64 @@ int opt;
 }
 //this is for the -a flag
 void a_flag(){
-    const char* dirName = ".";
-    DIR* dirp = opendir(dirName);
-    dirent* direntp;
-    while((direntp = readdir(dirp)))
-        cout << direntp->d_name << endl;
-    closedir(dirp);
-}
-//this is for the -l flag
-void l_flag(){
-    struct stat stat_buf;
+    int prints = 0;
     const char* dirName = ".";
     DIR* dirp = opendir(dirName);
     dirent* direntp;
     while((direntp = readdir(dirp))){
-        if(strcmp(direntp->d_name, ".") == 0 || strcmp(direntp->d_name, "..") == 0){ continue;}
+        string file_name = direntp->d_name;
+        cout << file_name <<"     " << setw(5);
+        prints++;
+        if(prints % 4 == 0){ cout << endl;}
+    }
+    closedir(dirp);
+    cout << endl;
+}
 
-    if(S_ISREG(stat_buf.st_mode) && argv[1] != NULL )
-    }
+//this is for the -l flag
+void l_flag(){
+    int l_total = 0;
+    struct stat stat_buf;
+    const char* dirName = ".";
+    DIR* dirp = opendir(dirName);
     dirent* direntp;
-    if(stat(direntp->d_name, &stat_buf) == -1){
-        perror("error in stat");
-    }
+
+    if(stat((direntp->d_name), &stat_buf) == -1) {perror("stat");}
     else{
-        if(S_ISDIR(statbuf.st_mode)){
-            cout << "1"<< endl;
-            cout << "in s_islink" << endl;
-        }
+
+            cout << ("-");
+            cout << ((stat_buf.st_mode & S_IRUSR) ? "r":"-");
+            cout << ((stat_buf.st_mode & S_IWUSR) ? "w":"-");
+            cout << ((stat_buf.st_mode & S_IXUSR) ? "x":"-");
+            cout << ((stat_buf.st_mode & S_IRGRP) ? "x":"-");
+            cout << ((stat_buf.st_mode & S_IWGRP) ? "w":"-");
+            cout << ((stat_buf.st_mode & S_IXGRP) ? "x":"-");
+            cout << ((stat_buf.st_mode & S_IROTH) ? "r":"-");
+            cout << ((stat_buf.st_mode & S_IWOTH) ? "w":"-");
+            cout << ((stat_buf.st_mode & S_IXOTH) ? "x":"-");
+            cout << endl;
     }
+    closedir(dirp);
+    ////////////////////////////////////////
+    ////////////////////////////////////////
+
+
    // while((direntp = readdir(dirp))){
      //   if((direntp->d_name != ".") || (direntp->d_name != ".."))
        //     cout << direntp->d_name << endl;
    // }
    // closedir(dirp);
-}
 
+}
 int main (int argc, char* argv[]){
     for(int i = 1; i != argc; i++){//for loop skips argv[0] since it's the executable
 
 }
+    vector <char*> all_files;
+    for(int i =1; i < argc; i++){
+        all_files.push_back(argv[i]);
+
+    }
     get_flags(argc, argv);
     if(dash_a == true) {a_flag();}
     if(dash_l == true) {l_flag();}
